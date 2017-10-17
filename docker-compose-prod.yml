@@ -1,0 +1,41 @@
+version: '3.3'
+
+services:
+
+  users-service:
+    container_name: users-service
+    build:
+      context: ./users-service
+      dockerfile: Dockerfile-prod
+    expose:
+      - '5000'
+    environment:
+      - APP_SETTINGS=project.config.ProductionConfig
+      - DATABASE_URL=postgres://postgres:postgres@users-db:5432/users_prod
+      - DATABASE_TEST_URL=postgres://postgres:postgres@users-db:5432/users_test
+    depends_on:
+      - users-db
+    links:
+      - users-db
+
+  users-db:
+    container_name: users-db
+    build:
+      context: ./users-service/project/db
+      dockerfile: Dockerfile
+    ports:
+      - 5435:5432
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+
+  nginx:
+    container_name: nginx
+    build: ./nginx/
+    restart: always
+    ports:
+      - 80:80
+    depends_on:
+      - users-service
+    links:
+      - users-service
