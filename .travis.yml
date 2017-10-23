@@ -19,4 +19,4 @@ script:
   - docker-compose -f docker-compose-dev.yml run users-service python manage.py test
 
 after_script:
-  - docker-compose down
+  - docker-compose -f docker-compose-dev.yml down

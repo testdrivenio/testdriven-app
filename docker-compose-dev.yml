@@ -5,10 +5,10 @@ services:
   users-service:
     container_name: users-service
     build:
-      context: ./users-service
+      context: ./services/users
       dockerfile: Dockerfile-dev
     volumes:
-      - './users-service:/usr/src/app'
+      - './services/users:/usr/src/app'
     ports:
       - 5001:5000
     environment:
@@ -23,7 +23,7 @@ services:
   users-db:
     container_name: users-db
     build:
-      context: ./users-service/project/db
+      context: ./services/users/project/db
       dockerfile: Dockerfile
     ports:
       - 5435:5432
@@ -33,10 +33,27 @@ services:
 
   nginx:
     container_name: nginx
-    build: ./nginx/
+    build: ./services/nginx
     restart: always
     ports:
       - 80:80
+    depends_on:
+      - users-service
+    links:
+      - users-service
+
+  client:
+    container_name: client
+    build:
+      context: ./services/client
+      dockerfile: Dockerfile-dev
+    volumes:
+      - './services/client:/usr/src/app'
+    ports:
+      - '3007:3000' # expose ports - HOST:CONTAINER
+    environment:
+      - NODE_ENV=development
+      - REACT_APP_USERS_SERVICE_URL=${REACT_APP_USERS_SERVICE_URL}
     depends_on:
       - users-service
     links:
