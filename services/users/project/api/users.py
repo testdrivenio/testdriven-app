@@ -1,4 +1,4 @@
-# users/project/api/users.py
+# services/users/project/api/users.py
 
 
 from sqlalchemy import exc

@@ -1,4 +1,4 @@
-# users/manage.py
+# services/users/manage.py
 
 
 import unittest

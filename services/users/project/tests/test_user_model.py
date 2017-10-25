@@ -1,4 +1,4 @@
-# users/project/tests/test_user_model.py
+# services/users/project/tests/test_user_model.py
 
 
 from sqlalchemy.exc import IntegrityError
@@ -47,3 +47,14 @@ class TestUserModel(BaseTestCase):
         user_one = add_user('justatest', 'test@test.com', 'test')
         user_two = add_user('justatest2', 'test@test2.com', 'test')
         self.assertNotEqual(user_one.password, user_two.password)
+
+    def test_encode_auth_token(self):
+        user = add_user('justatest', 'test@test.com', 'test')
+        auth_token = user.encode_auth_token(user.id)
+        self.assertTrue(isinstance(auth_token, bytes))
+
+    def test_decode_auth_token(self):
+        user = add_user('justatest', 'test@test.com', 'test')
+        auth_token = user.encode_auth_token(user.id)
+        self.assertTrue(isinstance(auth_token, bytes))
+        self.assertTrue(User.decode_auth_token(auth_token), user.id)
