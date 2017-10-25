@@ -1,10 +1,11 @@
-# users-service/manage.py
+# users/manage.py
 
 
 import unittest
 import coverage
 
 from flask_script import Manager
+from flask_migrate import MigrateCommand
 
 from project import create_app, db
 from project.api.models import User
@@ -24,6 +25,7 @@ COV.start()
 
 app = create_app()
 manager = Manager(app)
+manager.add_command('db', MigrateCommand)
 
 
 @manager.command
