@@ -2,7 +2,7 @@ import React from 'react';
 import { shallow } from 'enzyme';
 import renderer from 'react-test-renderer';
 
-import About from './About';
+import About from '../About';
 
 test('About renders properly', () => {
   const wrapper = shallow(<About/>);
