@@ -4,6 +4,8 @@
 import time
 import json
 
+from flask import current_app
+
 from project.tests.base import BaseTestCase
 from project.tests.utils import add_user
 
@@ -180,6 +182,7 @@ class TestAuthBlueprint(BaseTestCase):
 
     def test_invalid_logout_expired_token(self):
         add_user('test', 'test@test.com', 'test')
+        current_app.config['TOKEN_EXPIRATION_SECONDS'] = -1
         with self.client:
             resp_login = self.client.post(
                 '/auth/login',
@@ -190,7 +193,6 @@ class TestAuthBlueprint(BaseTestCase):
                 content_type='application/json'
             )
             # invalid token logout
-            time.sleep(4)
             token = json.loads(resp_login.data.decode())['auth_token']
             response = self.client.get(
                 '/auth/logout',
