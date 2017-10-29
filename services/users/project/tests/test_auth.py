@@ -1,7 +1,6 @@
 # services/users/project/tests/test_auth.py
 
 
-import time
 import json
 
 from flask import current_app
