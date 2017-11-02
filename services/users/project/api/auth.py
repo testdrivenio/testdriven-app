@@ -6,6 +6,7 @@ from sqlalchemy import exc, or_
 
 from project.api.models import User
 from project import db, bcrypt
+from project.api.utils import authenticate
 
 
 auth_blueprint = Blueprint('auth', __name__)
@@ -94,9 +95,13 @@ def logout_user():
         auth_token = auth_header.split(' ')[1]
         resp = User.decode_auth_token(auth_token)
         if not isinstance(resp, str):
-            response_object['status'] = 'success'
-            response_object['message'] = 'Successfully logged out.'
-            return jsonify(response_object), 200
+            user = User.query.filter_by(id=resp).first()
+            if not user or not user.active:
+                return jsonify(response_object), 401
+            else:
+                response_object['status'] = 'success'
+                response_object['message'] = 'Successfully logged out.'
+                return jsonify(response_object), 200
         else:
             response_object['message'] = resp
             return jsonify(response_object), 401
@@ -105,23 +110,12 @@ def logout_user():
 
 
 @auth_blueprint.route('/auth/status', methods=['GET'])
-def get_user_status():
-    # get auth token
-    auth_header = request.headers.get('Authorization')
+@authenticate
+def get_user_status(resp):
+    user = User.query.filter_by(id=resp).first()
     response_object = {
-        'status': 'fail',
-        'message': 'Provide a valid auth token.'
+        'status': 'success',
+        'message': 'success',
+        'data': user.to_json()
     }
-    if auth_header:
-        auth_token = auth_header.split(' ')[1]
-        resp = User.decode_auth_token(auth_token)
-        if not isinstance(resp, str):
-            user = User.query.filter_by(id=resp).first()
-            response_object['status'] = 'success'
-            response_object['message'] = 'Success.'
-            response_object['data'] = user.to_json()
-            return jsonify(response_object), 200
-        response_object['message'] = resp
-        return jsonify(response_object), 401
-    else:
-        return jsonify(response_object), 401
+    return jsonify(response_object), 200
