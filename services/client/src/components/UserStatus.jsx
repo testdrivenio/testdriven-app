@@ -6,10 +6,11 @@ class UserStatus extends Component {
   constructor (props) {
     super(props);
     this.state = {
-      created_at: '',
       email: '',
       id: '',
-      username: ''
+      username: '',
+      active: '',
+      admin: ''
     };
   };
   componentDidMount() {
@@ -29,10 +30,11 @@ class UserStatus extends Component {
     return axios(options)
     .then((res) => {
       this.setState({
-        created_at: res.data.data.created_at,
         email: res.data.data.email,
         id: res.data.data.id,
-        username: res.data.data.username
+        username: res.data.data.username,
+        active: String(res.data.data.active),
+        admin: String(res.data.data.admin),
       })
     })
     .catch((error) => { console.log(error); });
@@ -47,6 +49,8 @@ class UserStatus extends Component {
           <li><strong>User ID:</strong> {this.state.id}</li>
           <li><strong>Email:</strong> {this.state.email}</li>
           <li><strong>Username:</strong> {this.state.username}</li>
+          <li><strong>Active:</strong> {this.state.active}</li>
+          <li><strong>Admin:</strong> {this.state.admin}</li>
         </ul>
       </div>
     )
