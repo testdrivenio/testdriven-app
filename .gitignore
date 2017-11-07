@@ -2,3 +2,4 @@ __pycache__
 env
 htmlcov/
 jest_0/
+node_modules

@@ -1,0 +1,6 @@
+{
+  "name": "test-driven",
+  "devDependencies": {
+    "testcafe": "^0.18.2"
+  }
+}
