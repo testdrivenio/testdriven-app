@@ -26,12 +26,14 @@ docker-compose -f $file run users-service python manage.py test
 inspect $? users
 docker-compose -f $file run users-service flake8 project
 inspect $? users-lint
-testcafe chrome e2e
-inspect $? e2e
 if [[ "${env}" != "stage" ]]; then
   docker-compose -f $file run client npm test -- --coverage
   inspect $? client
+  testcafe chrome e2e
+  inspect $? e2e
 fi
+testcafe chrome e2e/index.test.js
+inspect $? e2e
 
 if [ -n "${fails}" ]; then
   echo "Tests failed: ${fails}"
