@@ -8,6 +8,7 @@ import NavBar from './components/NavBar';
 import Form from './components/forms/Form';
 import Logout from './components/Logout';
 import UserStatus from './components/UserStatus';
+import Message from './components/Message';
 
 class App extends Component {
   constructor() {
@@ -15,9 +16,14 @@ class App extends Component {
     this.state = {
       users: [],
       title: 'TestDriven.io',
-      isAuthenticated: false
+      isAuthenticated: false,
+      messageName: null,
+      messageType: null,
     };
-    this.logoutUser= this.logoutUser.bind(this);
+    this.logoutUser = this.logoutUser.bind(this);
+    this.loginUser = this.loginUser.bind(this);
+    this.createMessage = this.createMessage.bind(this);
+    this.removeMessage = this.removeMessage.bind(this);
   }
   componentWillMount() {
     if (window.localStorage.getItem('authToken')) {
@@ -40,6 +46,22 @@ class App extends Component {
     window.localStorage.setItem('authToken', token);
     this.setState({ isAuthenticated: true });
     this.getUsers();
+    this.createMessage('Welcome!', 'success');
+  };
+  createMessage(name='Sanity Check', type='success') {
+    this.setState({
+      messageName: name,
+      messageType: type
+    });
+    setTimeout(() => {
+      this.removeMessage();
+    }, 3000);
+  };
+  removeMessage() {
+    this.setState({
+      messageName: null,
+      messageType: null
+    });
   };
   render() {
     return (
@@ -49,6 +71,13 @@ class App extends Component {
           isAuthenticated={this.state.isAuthenticated}
         />
         <div className="container">
+          {this.state.messageName && this.state.messageType &&
+            <Message
+              messageName={this.state.messageName}
+              messageType={this.state.messageType}
+              removeMessage={this.removeMessage}
+            />
+          }
           <div className="row">
             <div className="col-md-6">
               <br/>
@@ -63,19 +92,21 @@ class App extends Component {
                   <Form
                     formType={'register'}
                     isAuthenticated={this.state.isAuthenticated}
-                    loginUser={this.loginUser.bind(this)}
+                    loginUser={this.loginUser}
+                    createMessage={this.createMessage}
                   />
                 )} />
                 <Route exact path='/login' render={() => (
                   <Form
                     formType={'login'}
                     isAuthenticated={this.state.isAuthenticated}
-                    loginUser={this.loginUser.bind(this)}
+                    loginUser={this.loginUser}
+                    createMessage={this.createMessage}
                   />
                 )} />
                 <Route exact path='/logout' render={() => (
                   <Logout
-                    logoutUser={this.logoutUser.bind(this)}
+                    logoutUser={this.logoutUser}
                     isAuthenticated={this.state.isAuthenticated}
                   />
                 )} />
