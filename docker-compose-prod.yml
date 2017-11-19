@@ -38,6 +38,7 @@ services:
       - 80:80
     depends_on:
       - users-service
+      - client
     links:
       - users-service
 
@@ -50,7 +51,7 @@ services:
         - NODE_ENV=development
         - REACT_APP_USERS_SERVICE_URL=${REACT_APP_USERS_SERVICE_URL}
     ports:
-      - '3007:3000' # expose ports - HOST:CONTAINER
+      - '3007:3000'
     depends_on:
       - users-service
     links:
