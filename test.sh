@@ -31,9 +31,10 @@ if [[ "${env}" != "stage" ]]; then
   inspect $? client
   testcafe chrome e2e
   inspect $? e2e
+else
+  testcafe chrome e2e/index.test.js
+  inspect $? e2e
 fi
-testcafe chrome e2e/index.test.js
-inspect $? e2e
 
 if [ -n "${fails}" ]; then
   echo "Tests failed: ${fails}"
