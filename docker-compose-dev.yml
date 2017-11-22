@@ -66,7 +66,7 @@ services:
     container_name: swagger
     build:
       context: ./services/swagger
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile-dev
     volumes:
       - './services/swagger/swagger.json:/usr/share/nginx/html/swagger.json'
     ports:
