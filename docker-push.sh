@@ -18,7 +18,7 @@ then
 
   if [ "$TRAVIS_BRANCH" == "staging" ]
   then
-    export REACT_APP_USERS_SERVICE_URL="LOAD_BALANCER_STAGE_DNS_NAME"
+    export REACT_APP_USERS_SERVICE_URL="http://testdriven-staging-alb-1378944177.us-east-1.elb.amazonaws.com"
   fi
 
   if [ "$TRAVIS_BRANCH" == "staging" ] || \
