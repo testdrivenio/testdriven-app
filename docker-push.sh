@@ -16,6 +16,11 @@ then
     export REPO=$AWS_ACCOUNT_ID.dkr.ecr.us-east-1.amazonaws.com
   fi
 
+  if [ "$TRAVIS_BRANCH" == "staging" ]
+  then
+    export REACT_APP_USERS_SERVICE_URL="LOAD_BALANCER_STAGE_DNS_NAME"
+  fi
+
   if [ "$TRAVIS_BRANCH" == "staging" ] || \
      [ "$TRAVIS_BRANCH" == "production" ]
   then
