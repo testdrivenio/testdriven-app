@@ -17,7 +17,7 @@ ADD ./requirements.txt /usr/src/app/requirements.txt
 RUN pip install -r requirements.txt
 
 # add entrypoint.sh
-ADD ./entrypoint-prod.sh /usr/src/app/entrypoint-prod.sh
+ADD ./entrypoint-stage.sh /usr/src/app/entrypoint-stage.sh
 
 # add app
 ADD . /usr/src/app
