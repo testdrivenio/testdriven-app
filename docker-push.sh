@@ -28,7 +28,7 @@ then
     docker tag $USERS_DB:$COMMIT $REPO/$USERS_DB:$TAG
     docker push $REPO/$USERS_DB:$TAG
     # client
-    docker build $CLIENT_REPO -t $CLIENT:$COMMIT -f Dockerfile-$DOCKER_ENV
+    docker build $CLIENT_REPO -t $CLIENT:$COMMIT -f Dockerfile-$DOCKER_ENV --build-arg REACT_APP_USERS_SERVICE_URL=http://127.0.0.1
     docker tag $CLIENT:$COMMIT $REPO/$CLIENT:$TAG
     docker push $REPO/$CLIENT:$TAG
     # swagger
