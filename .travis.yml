@@ -23,13 +23,13 @@ env:
     - COMMIT=${TRAVIS_COMMIT::8}
     - MAIN_REPO=https://github.com/realpython/testdriven-app.git
     - USERS=test-driven-users
-    - USERS_REPO=${MAIN_REPO}#master:services/users
+    - USERS_REPO=${MAIN_REPO}#${TRAVIS_BRANCH}:services/users
     - USERS_DB=test-driven-users_db
-    - USERS_DB_REPO=${MAIN_REPO}#master:services/users/project/db
+    - USERS_DB_REPO=${MAIN_REPO}#${TRAVIS_BRANCH}:services/users/project/db
     - CLIENT=test-driven-client
-    - CLIENT_REPO=${MAIN_REPO}#master:services/client
+    - CLIENT_REPO=${MAIN_REPO}#${TRAVIS_BRANCH}:services/client
     - SWAGGER=test-driven-swagger
-    - SWAGGER_REPO=${MAIN_REPO}#master:services/swagger
+    - SWAGGER_REPO=${MAIN_REPO}#${TRAVIS_BRANCH}:services/swagger
 
 before_install:
   - sudo rm /usr/local/bin/docker-compose
@@ -55,3 +55,4 @@ after_script:
 
 after_success:
   - bash ./docker-push.sh
+  - bash ./docker-deploy-stage.sh
