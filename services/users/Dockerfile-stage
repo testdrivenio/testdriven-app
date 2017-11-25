@@ -23,4 +23,4 @@ ADD ./entrypoint-prod.sh /usr/src/app/entrypoint-prod.sh
 ADD . /usr/src/app
 
 # run server
-CMD ["./entrypoint-prod.sh"]
+CMD ["./entrypoint-stage.sh"]
