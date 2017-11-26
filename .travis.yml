@@ -23,13 +23,13 @@ env:
     - COMMIT=${TRAVIS_COMMIT::8}
     - MAIN_REPO=https://github.com/realpython/testdriven-app.git
     - USERS=test-driven-users
-    - USERS_REPO=${MAIN_REPO}#master:services/users
+    - USERS_REPO=${MAIN_REPO}#${TRAVIS_BRANCH}:services/users
     - USERS_DB=test-driven-users_db
-    - USERS_DB_REPO=${MAIN_REPO}#master:services/users/project/db
+    - USERS_DB_REPO=${MAIN_REPO}#${TRAVIS_BRANCH}:services/users/project/db
     - CLIENT=test-driven-client
-    - CLIENT_REPO=${MAIN_REPO}#master:services/client
+    - CLIENT_REPO=${MAIN_REPO}#${TRAVIS_BRANCH}:services/client
     - SWAGGER=test-driven-swagger
-    - SWAGGER_REPO=${MAIN_REPO}#master:services/swagger
+    - SWAGGER_REPO=${MAIN_REPO}#${TRAVIS_BRANCH}:services/swagger
 
 before_install:
   - sudo rm /usr/local/bin/docker-compose
@@ -45,13 +45,15 @@ before_script:
   - export DOCKER_ENV=$(if [ "$TRAVIS_BRANCH" == "production" ]; then echo "prod"; else echo "stage"; fi)
   - sh -e /etc/init.d/xvfb start
   - sleep 3
-  - docker-compose -f docker-compose-$DOCKER_ENV.yml up --build -d
+  - docker-compose -f docker-compose-stage.yml up --build -d
 
 script:
   - bash test.sh $DOCKER_ENV
 
 after_script:
-  - docker-compose -f docker-compose-$DOCKER_ENV.yml down
+  - docker-compose -f docker-compose-stage.yml down
 
 after_success:
   - bash ./docker-push.sh
+  - bash ./docker-deploy-stage.sh
+  - bash ./docker-deploy-prod.sh
