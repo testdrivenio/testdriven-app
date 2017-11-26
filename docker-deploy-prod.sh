@@ -24,28 +24,43 @@ then
       fi
     }
 
+    update_service() {
+      if [[ $(aws ecs update-service --cluster $cluster --service $service --task-definition $revision | $JQ '.service.taskDefinition') != $revision ]]; then
+        echo "Error updating service."
+        return 1
+      fi
+    }
+
     deploy_cluster() {
 
+      cluster="test-driven-production-cluster"
+
       # users
-      template="ecs_users_stage_taskdefinition.json"
+      service="testdriven-users-prod-service"
+      template="ecs_users_prod_taskdefinition.json"
       task_template=$(cat "ecs/$template")
       task_def=$(printf "$task_template" $AWS_ACCOUNT_ID $AWS_RDS_URI $PRODUCTION_SECRET_KEY)
       echo "$task_def"
       register_definition
+      update_service
 
       # client
-      template="ecs_client_stage_taskdefinition.json"
+      service="testdriven-client-prod-service"
+      template="ecs_client_prod_taskdefinition.json"
       task_template=$(cat "ecs/$template")
       task_def=$(printf "$task_template" $AWS_ACCOUNT_ID)
       echo "$task_def"
       register_definition
+      update_service
 
       # swagger
-      template="ecs_swagger_stage_taskdefinition.json"
+      service="testdriven-swagger-prod-service"
+      template="ecs_swagger_prod_taskdefinition.json"
       task_template=$(cat "ecs/$template")
       task_def=$(printf "$task_template" $AWS_ACCOUNT_ID)
       echo "$task_def"
       register_definition
+      update_service
 
     }
 
