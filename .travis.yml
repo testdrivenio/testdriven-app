@@ -47,8 +47,7 @@ before_script:
   - sleep 3
   - docker-compose -f docker-compose-stage.yml up --build -d
 
-script:
-  - bash test.sh $DOCKER_ENV
+
 
 after_script:
   - docker-compose -f docker-compose-$DOCKER_ENV.yml down
