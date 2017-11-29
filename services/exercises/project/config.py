@@ -1,4 +1,4 @@
-# project/config.py
+# services/exercises/project/config.py
 
 
 import os

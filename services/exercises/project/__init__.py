@@ -1,4 +1,4 @@
-# project/__init__.py
+# services/exercises/project/__init__.py
 
 
 import os

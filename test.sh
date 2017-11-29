@@ -5,7 +5,7 @@ file=""
 fails=""
 
 if [[ "${env}" == "stage" ]]; then
-  file="docker-compose-stage.yml"
+  file="docker-compose-dev.yml"
 elif [[ "${env}" == "dev" ]]; then
   file="docker-compose-dev.yml"
 elif [[ "${env}" == "prod" ]]; then
