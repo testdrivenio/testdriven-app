@@ -1,3 +1,11 @@
 #!/bin/sh
 
-gunicorn -b 0.0.0.0:5000 manage:app
+echo "Waiting for postgres..."
+
+while ! nc -z exercises-db 5432; do
+  sleep 0.1
+done
+
+echo "PostgreSQL started"
+
+python manage.py runserver -h 0.0.0.0
