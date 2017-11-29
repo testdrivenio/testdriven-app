@@ -2,21 +2,22 @@
   "name": "client",
   "version": "0.1.0",
   "private": true,
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  },
   "dependencies": {
     "axios": "^0.16.2",
     "react": "^16.0.0",
+    "react-ace": "^5.7.0",
     "react-bootstrap": "^0.31.5",
     "react-dom": "^16.0.0",
     "react-router-bootstrap": "^0.24.4",
     "react-router-dom": "^4.2.2",
     "react-scripts": "1.0.15",
     "testcafe": "^0.16.1"
-  },
-  "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
   },
   "devDependencies": {
     "enzyme": "^3.1.0",

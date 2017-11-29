@@ -75,3 +75,20 @@ services:
       - URL=swagger.json
     depends_on:
       - users-service
+
+  exercises:
+    container_name: exercises
+    build:
+      context: ./services/exercises
+      dockerfile: Dockerfile-dev
+    volumes:
+      - './services/exercises:/usr/src/app'
+    ports:
+      - 5002:5000
+    environment:
+      - APP_SETTINGS=project.config.DevelopmentConfig
+      - USERS_SERVICE_URL=http://users-service:5000
+    depends_on:
+      - users-service
+    links:
+      - users-service
