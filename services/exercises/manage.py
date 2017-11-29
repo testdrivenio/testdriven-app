@@ -1,4 +1,4 @@
-# manage.py
+# services/exercises/manage.py
 
 
 import unittest
