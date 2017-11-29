@@ -29,6 +29,7 @@ class TestTestingConfig(TestCase):
     def test_app_is_testing(self):
         self.assertTrue(app.config['DEBUG'])
         self.assertTrue(app.config['TESTING'])
+        self.assertFalse(app.config['PRESERVE_CONTEXT_ON_EXCEPTION'])
 
 
 class TestProductionConfig(TestCase):
