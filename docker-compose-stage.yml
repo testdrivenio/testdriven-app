@@ -50,6 +50,8 @@ services:
       args:
         - NODE_ENV=development
         - REACT_APP_USERS_SERVICE_URL=${REACT_APP_USERS_SERVICE_URL}
+        - REACT_APP_API_GATEWAY_URL=${REACT_APP_API_GATEWAY_URL}
+        - REACT_APP_EXERCISES_SERVICE_URL=${REACT_APP_EXERCISES_SERVICE_URL}
     ports:
       - '3007:3000'
     depends_on:
@@ -68,3 +70,32 @@ services:
       - URL=swagger.json
     depends_on:
       - users-service
+
+  exercises:
+    container_name: exercises
+    build:
+      context: ./services/exercises
+      dockerfile: Dockerfile-stage
+    ports:
+      - 5002:5000
+    environment:
+      - APP_SETTINGS=project.config.StagingConfig
+      - DATABASE_URL=postgres://postgres:postgres@exercises-db:5432/exercises_staging
+      - DATABASE_TEST_URL=postgres://postgres:postgres@exercises-db:5432/exercises_test
+    depends_on:
+      - users-service
+      - exercises-db
+    links:
+      - users-service
+      - exercises-db
+
+  exercises-db:
+    container_name: exercises-db
+    build:
+      context: ./services/exercises/project/db
+      dockerfile: Dockerfile
+    ports:
+      - 5436:5432
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
