@@ -14,5 +14,4 @@ test(`should display the all-users page correctly if a user is not logged in`, a
     .expect(Selector('a').withText('Log In').exists).ok()
     .expect(Selector('a').withText('Swagger').exists).ok()
     .expect(Selector('a').withText('Users').exists).ok()
-    .expect(Selector('.alert').exists).notOk()
 });
