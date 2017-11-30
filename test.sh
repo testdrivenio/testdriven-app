@@ -5,7 +5,7 @@ file=""
 fails=""
 
 if [[ "${env}" == "stage" ]]; then
-  file="docker-compose-dev.yml"
+  file="docker-compose-stage.yml"
 elif [[ "${env}" == "dev" ]]; then
   file="docker-compose-dev.yml"
 elif [[ "${env}" == "prod" ]]; then
@@ -21,6 +21,8 @@ inspect() {
     fails="${fails} $2"
   fi
 }
+
+/bin/sleep 5
 
 docker-compose -f $file run users-service python manage.py test
 inspect $? users
