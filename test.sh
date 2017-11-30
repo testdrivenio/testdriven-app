@@ -22,6 +22,8 @@ inspect() {
   fi
 }
 
+/bin/sleep 5
+
 docker-compose -f $file run users-service python manage.py test
 inspect $? users
 docker-compose -f $file run users-service flake8 project
