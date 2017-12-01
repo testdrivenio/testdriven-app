@@ -34,22 +34,20 @@ test('UsersList renders properly', () => {
   // table head
   expect(wrapper.find('thead').length).toBe(1);
   const th = wrapper.find('th');
-  expect(th.length).toBe(5);
+  expect(th.length).toBe(4);
   expect(th.get(0).props.children).toBe('User ID');
-  expect(th.get(1).props.children).toBe('Email');
-  expect(th.get(2).props.children).toBe('Username');
-  expect(th.get(3).props.children).toBe('Active');
-  expect(th.get(4).props.children).toBe('Admin');
+  expect(th.get(1).props.children).toBe('Username');
+  expect(th.get(2).props.children).toBe('Active');
+  expect(th.get(3).props.children).toBe('Admin');
   // table body
   expect(wrapper.find('tbody').length).toBe(1);
   expect(wrapper.find('tbody > tr').length).toBe(2);
   const td = wrapper.find('tbody > tr > td');
-  expect(td.length).toBe(10);
+  expect(td.length).toBe(8);
   expect(td.get(0).props.children).toBe(1);
-  expect(td.get(1).props.children).toBe('michael@realpython.com');
-  expect(td.get(2).props.children).toBe('michael');
-  expect(td.get(3).props.children).toBe('true');
-  expect(td.get(4).props.children).toBe('false');
+  expect(td.get(1).props.children).toBe('michael');
+  expect(td.get(2).props.children).toBe('true');
+  expect(td.get(3).props.children).toBe('false');
 });
 
 test('UsersList renders a snapshot properly', () => {
