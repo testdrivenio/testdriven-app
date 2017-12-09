@@ -10,7 +10,9 @@ import Exercise from '../Exercise';
 const testData = {
   exercise: {
     id: 0,
-    body: 'Define a function called sum that takes two integers as arguments and returns their sum.'
+    body: 'Define a function called sum that takes two integers as arguments and returns their sum.',
+    test_code: 'sum(2,2)',
+    test_code_solution: '4'
   },
   editor: {
     value: '# Enter your code here.',
@@ -26,11 +28,26 @@ const testData = {
   submitExercise: jest.fn(),
 }
 
+beforeEach(() => {
+  console.error = jest.fn();
+  console.error.mockClear();
+});
+
 test('Exercise renders properly', () => {
   const wrapper = shallow(<Exercise {...testData}/>);
   const heading = wrapper.find('h4');
   expect(heading.length).toBe(1);
   expect(heading.text()).toBe(testData.exercise.body)
+  expect(console.error).toHaveBeenCalledTimes(0);
+});
+
+test('Exercise does not render properly when not all props are defined', () => {
+  delete testData.submitExercise
+  const wrapper = shallow(<Exercise {...testData}/>);
+  const heading = wrapper.find('h4');
+  expect(heading.length).toBe(1);
+  expect(heading.text()).toBe(testData.exercise.body)
+  expect(console.error).toHaveBeenCalledTimes(1);
 });
 
 test('Exercises renders a snapshot properly when not authenticated', () => {

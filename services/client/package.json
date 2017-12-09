@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "axios": "^0.16.2",
+    "prop-types": "^15.6.0",
     "react": "^16.0.0",
     "react-ace": "^5.7.0",
     "react-bootstrap": "^0.31.5",
