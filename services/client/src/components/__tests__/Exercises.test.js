@@ -27,8 +27,6 @@ test('Exercises renders properly when not authenticated', () => {
   Exercises.prototype.componentDidMount = onDidMount;
   const wrapper = shallow(<Exercises isAuthenticated={false}/>);
   wrapper.setState({exercises : exercises});
-  const heading = wrapper.find('h4');
-  expect(heading.length).toBe(1);
   const alert = wrapper.find('.alert');
   expect(alert.length).toBe(1);
   expect(alert.get(0).props.children[1].props.children).toContain(
@@ -40,8 +38,6 @@ test('Exercises renders properly when authenticated', () => {
   Exercises.prototype.componentDidMount = onDidMount;
   const wrapper = shallow(<Exercises isAuthenticated={true}/>);
   wrapper.setState({exercises : exercises});
-  const heading = wrapper.find('h4');
-  expect(heading.length).toBe(1);
   const alert = wrapper.find('.alert');
   expect(alert.length).toBe(0);
 });

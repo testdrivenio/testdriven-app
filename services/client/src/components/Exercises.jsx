@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
-import { Button, Glyphicon } from 'react-bootstrap';
-import AceEditor from 'react-ace';
-import 'brace/mode/python';
-import 'brace/theme/solarized_dark';
 import axios from 'axios';
+
+import Exercise from './Exercise';
 
 class Exercises extends Component {
   constructor (props) {
@@ -36,22 +34,28 @@ class Exercises extends Component {
     newState.value = value;
     this.setState(newState);
   };
-  submitExercise(event) {
+  submitExercise(event, id) {
     event.preventDefault();
     const newState = this.state.editor;
+    const exercise = this.state.exercises.filter(el => el.id === id)[0]
     newState.showGrading = true;
     newState.showCorrect = false;
     newState.showIncorrect = false;
     newState.button.isDisabled = true;
     this.setState(newState);
-    const data = { answer: this.state.editor.value };
+    const data = {
+      answer: this.state.editor.value,
+      test: exercise.test_code,
+      solution: exercise.test_code_solution,
+    };
+    console.log(data);
     const url = process.env.REACT_APP_API_GATEWAY_URL;
     axios.post(url, data)
     .then((res) => {
       newState.showGrading = false
       newState.button.isDisabled = false
-      if (res.data) {newState.showCorrect = true};
-      if (!res.data) {newState.showIncorrect = true};
+      if (res.data && !res.data.errorType) {newState.showCorrect = true};
+      if (!res.data || res.data.errorType) {newState.showIncorrect = true};
       this.setState(newState);
     })
     .catch((err) => {
@@ -65,74 +69,27 @@ class Exercises extends Component {
       <div>
         <h1>Exercises</h1>
         <hr/><br/>
-          {!this.props.isAuthenticated &&
-            <div>
-              <div className="alert alert-warning">
-                <span
-                  className="glyphicon glyphicon-exclamation-sign"
-                  aria-hidden="true">
-                </span>
-                <span>&nbsp;Please log in to submit an exercise.</span>
-              </div>
-              <br/>
+        {!this.props.isAuthenticated &&
+          <div>
+            <div className="alert alert-warning">
+              <span
+                className="glyphicon glyphicon-exclamation-sign"
+                aria-hidden="true">
+              </span>
+              <span>&nbsp;Please log in to submit an exercise.</span>
             </div>
-          }
-          {this.state.exercises.length &&
-            <div key={this.state.exercises[0].id}>
-              <h4>{this.state.exercises[0].body}</h4>
-                <AceEditor
-                  mode="python"
-                  theme="solarized_dark"
-                  name={(this.state.exercises[0].id).toString()}
-                  onLoad={this.onLoad}
-                  fontSize={14}
-                  height={'175px'}
-                  showPrintMargin={true}
-                  showGutter={true}
-                  highlightActiveLine={true}
-                  value={this.state.editor.value}
-                  style={{
-                    marginBottom: '10px'
-                  }}
-                  onChange={this.onChange}
-                />
-                {this.props.isAuthenticated &&
-                  <div>
-                    <Button
-                      bsStyle="primary"
-                      bsSize="small"
-                      onClick={this.submitExercise}
-                      disabled={this.state.editor.button.isDisabled}
-                    >Run Code</Button>
-                  {this.state.editor.showGrading &&
-                    <h4>
-                      &nbsp;
-                      <Glyphicon glyph="repeat" className="glyphicon-spin"/>
-                      &nbsp;
-                      Grading...
-                    </h4>
-                  }
-                  {this.state.editor.showCorrect &&
-                    <h4>
-                      &nbsp;
-                      <Glyphicon glyph="ok" className="glyphicon-correct"/>
-                      &nbsp;
-                      Correct!
-                    </h4>
-                  }
-                  {this.state.editor.showIncorrect &&
-                    <h4>
-                      &nbsp;
-                      <Glyphicon glyph="remove" className="glyphicon-incorrect"/>
-                      &nbsp;
-                      Incorrect!
-                    </h4>
-                  }
-                  </div>
-                }
-              <br/><br/>
-            </div>
-          }
+            <br/>
+          </div>
+        }
+        {this.state.exercises.length &&
+          <Exercise
+            exercise={this.state.exercises[0]}
+            editor={this.state.editor}
+            isAuthenticated={this.props.isAuthenticated}
+            onChange={this.onChange}
+            submitExercise={this.submitExercise}
+          />
+      }
       </div>
     )
   };

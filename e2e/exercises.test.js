@@ -16,7 +16,7 @@ test(`should display the exercises correctly if a user is not logged in`, async 
     .navigateTo(`${TEST_URL}/`)
     .expect(Selector('H1').withText('Exercises').exists).ok()
     .expect(Selector('.alert-warning').withText('Please log in to submit an exercise.').exists).ok()
-    .expect(Selector('button').withText('Run Code').exists).notOk()
+    .expect(Selector('button').withText('Run Code').exists).notOk();
 });
 
 test(`should allow a user to submit an exercise if logged in`, async (t) => {
@@ -33,4 +33,17 @@ test(`should allow a user to submit an exercise if logged in`, async (t) => {
     .expect(Selector('button').withText('Run Code').exists).ok()
     .click(Selector('button').withText('Run Code'))
     .expect(Selector('h4').withText('Incorrect!').exists).ok()
+    .expect(Selector('h4').withText('Correct!').exists).notOk()
+  await t
+    .navigateTo(`${TEST_URL}/`)
+    .selectText(Selector('textarea'))
+    .pressKey('home')
+    for (let i = 0; i < 23; i++) {
+      await t.pressKey('delete')
+    }
+  await t
+    .typeText('textarea', 'def sum(x,y):\nreturn x+y')
+    .click(Selector('button').withText('Run Code'))
+    .expect(Selector('h4').withText('Incorrect!').exists).notOk()
+    .expect(Selector('h4').withText('Correct!').exists).ok()
 });
