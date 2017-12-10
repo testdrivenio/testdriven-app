@@ -99,3 +99,32 @@ services:
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
+
+  scores:
+    container_name: scores
+    build:
+      context: ./services/scores
+      dockerfile: Dockerfile-prod
+    ports:
+      - 5003:5000
+    environment:
+      - APP_SETTINGS=project.config.ProductionConfig
+      - DATABASE_URL=postgres://postgres:postgres@scores-db:5432/scores_prod
+      - DATABASE_TEST_URL=postgres://postgres:postgres@scores-db:5432/scores_test
+    depends_on:
+      - users-service
+      - scores-db
+    links:
+      - users-service
+      - scores-db
+
+  scores-db:
+    container_name: scores-db
+    build:
+      context: ./services/scores/project/db
+      dockerfile: Dockerfile
+    ports:
+      - 5437:5432
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
