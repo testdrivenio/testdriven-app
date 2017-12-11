@@ -125,7 +125,6 @@ class TestScoresService(BaseTestCase):
             response = self.client.post(
                 '/scores',
                 data=json.dumps({
-                    'user_id': 1,
                     'exercise_id': 1,
                     'correct': False,
                 }),
@@ -156,7 +155,7 @@ class TestScoresService(BaseTestCase):
         with self.client:
             response = self.client.post(
                 '/scores',
-                data=json.dumps({'user_id': 1}),
+                data=json.dumps({'correct': True}),
                 content_type='application/json',
                 headers=({'Authorization': 'Bearer test'})
             )
@@ -170,7 +169,6 @@ class TestScoresService(BaseTestCase):
         response = self.client.post(
             '/scores',
             data=json.dumps({
-                'user_id': 1,
                 'exercise_id': 1,
                 'correct': False,
             }),
@@ -186,11 +184,8 @@ class TestScoresService(BaseTestCase):
         score = add_score(998877, 65479, True)
         with self.client:
             response = self.client.put(
-                f'/scores/{score.id}',
-                data=json.dumps({
-                    'exercise_id': 65479,
-                    'correct': False
-                }),
+                f'/scores/65479',
+                data=json.dumps({'correct': False}),
                 content_type='application/json',
                 headers=({'Authorization': 'Bearer test'})
             )
@@ -213,30 +208,13 @@ class TestScoresService(BaseTestCase):
             self.assertIn('Invalid payload.', data['message'])
             self.assertIn('fail', data['status'])
 
-    def test_update_score_invalid_json_keys(self):
-        """Ensure error is thrown if the JSON object is invalid."""
-        with self.client:
-            response = self.client.put(
-                '/scores/7',
-                data=json.dumps({'correct': True}),
-                content_type='application/json',
-                headers=({'Authorization': 'Bearer test'})
-            )
-            data = json.loads(response.data.decode())
-            self.assertEqual(response.status_code, 400)
-            self.assertIn('Invalid payload.', data['message'])
-            self.assertIn('fail', data['status'])
-
     def test_update_score_invalid_exercise_id(self):
         """Ensure error is thrown if the exercise does not exist."""
         add_score(998877, 65479, True)
         with self.client:
             response = self.client.put(
                 '/scores/9',
-                data=json.dumps({
-                    'exercise_id': 65479,
-                    'correct': False
-                }),
+                data=json.dumps({'correct': False}),
                 content_type='application/json',
                 headers=({'Authorization': 'Bearer test'})
             )
@@ -249,10 +227,7 @@ class TestScoresService(BaseTestCase):
         """Ensure error is thrown if 'Authorization' header is empty."""
         response = self.client.put(
             '/scores/9',
-            data=json.dumps({
-                'exercise_id': 86,
-                'correct': False
-            }),
+            data=json.dumps({'correct': False}),
             content_type='application/json'
         )
         data = json.loads(response.data.decode())

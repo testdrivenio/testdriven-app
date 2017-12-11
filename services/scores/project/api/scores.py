@@ -81,12 +81,11 @@ def add_scores(resp):
     }
     if not post_data:
         return jsonify(response_object), 400
-    user_id = post_data.get('user_id')
     exercise_id = post_data.get('exercise_id')
     correct = post_data.get('correct')
     try:
         db.session.add(Score(
-            user_id=user_id,
+            user_id=resp['data']['id'],
             exercise_id=exercise_id,
             correct=correct))
         db.session.commit()
@@ -101,9 +100,9 @@ def add_scores(resp):
         return jsonify(response_object), 400
 
 
-@scores_blueprint.route('/scores/<score_id>', methods=['PUT'])
+@scores_blueprint.route('/scores/<exercise_id>', methods=['PUT'])
 @authenticate
-def update_score(resp, score_id):
+def update_score(resp, exercise_id):
     """Update score"""
     post_data = request.get_json()
     response_object = {
@@ -112,11 +111,9 @@ def update_score(resp, score_id):
     }
     if not post_data:
         return jsonify(response_object), 400
-    exercise_id = post_data.get('exercise_id')
     correct = post_data.get('correct')
     try:
         score = Score.query.filter_by(
-            id=int(score_id),
             exercise_id=int(exercise_id),
             user_id=int(resp['data']['id'])
         ).first()

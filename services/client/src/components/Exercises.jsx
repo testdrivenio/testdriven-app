@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import axios from 'axios';
+import { Button, ButtonGroup } from 'react-bootstrap';
 
 import Exercise from './Exercise';
 
@@ -8,6 +9,7 @@ class Exercises extends Component {
   constructor (props) {
     super(props)
     this.state = {
+      currentExercise: 0,
       exercises: [],
       editor: {
         value: '# Enter your code here.',
@@ -18,16 +20,28 @@ class Exercises extends Component {
         showCorrect: false,
         showIncorrect: false,
       },
+      showButtons: {
+        prev: false,
+        next: false,
+      },
     };
     this.onChange = this.onChange.bind(this);
     this.submitExercise = this.submitExercise.bind(this);
+    this.updateScore = this.updateScore.bind(this);
+    this.renderButtons = this.renderButtons.bind(this);
   };
   componentDidMount() {
     this.getExercises();
   }
   getExercises() {
     return axios.get(`${process.env.REACT_APP_EXERCISES_SERVICE_URL}/exercises`)
-    .then((res) => { this.setState({ exercises: res.data.data.exercises }); })
+    .then((res) => {
+      this.setState({
+        exercises: res.data.data.exercises,
+        currentExercise: 0
+      });
+      console.log(this.renderButtons());
+    })
     .catch((err) => { console.log(err); });
   };
   onChange(value) {
@@ -49,21 +63,58 @@ class Exercises extends Component {
       test: exercise.test_code,
       solution: exercise.test_code_solution,
     };
-    console.log(data);
     const url = process.env.REACT_APP_API_GATEWAY_URL;
     axios.post(url, data)
     .then((res) => {
       newState.showGrading = false
       newState.button.isDisabled = false
-      if (res.data && !res.data.errorType) {newState.showCorrect = true};
-      if (!res.data || res.data.errorType) {newState.showIncorrect = true};
+      if (res.data && !res.data.errorType) {
+        newState.showCorrect = true
+        this.updateScore(exercise.id, true)
+      };
+      if (!res.data || res.data.errorType) {
+        newState.showIncorrect = true
+        this.updateScore(exercise.id, false)
+      };
       this.setState(newState);
     })
     .catch((err) => {
       newState.showGrading = false
       newState.button.isDisabled = false
       console.log(err);
+      this.updateScore(exercise.id, false)
     })
+  };
+  updateScore(exerciseID, bool) {
+    const options = {
+      url: `${process.env.REACT_APP_SCORES_SERVICE_URL}/scores/${exerciseID}`,
+      method: 'put',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${window.localStorage.authToken}`
+      },
+      data: {correct:bool}
+    };
+    return axios(options)
+    .then((res) => { console.log(res); })
+    .catch((error) => { console.log(error); });
+  };
+  renderButtons() {
+    const index = this.state.currentExercise;
+    let nextButton = false;
+    let prevButton = false;
+    if (typeof this.state.exercises[index + 1] !== 'undefined') {
+      nextButton = true;
+    }
+    if (typeof this.state.exercises[index - 1] !== 'undefined') {
+      prevButton = true;
+    }
+    this.setState({
+      showButtons: {
+        next: nextButton,
+        prev: prevButton
+      }
+    });
   };
   render() {
     return (
@@ -84,13 +135,27 @@ class Exercises extends Component {
         }
         {this.state.exercises.length &&
           <Exercise
-            exercise={this.state.exercises[0]}
+            exercise={this.state.exercises[this.state.currentExercise]}
             editor={this.state.editor}
             isAuthenticated={this.props.isAuthenticated}
             onChange={this.onChange}
             submitExercise={this.submitExercise}
           />
-      }
+        }
+        <ButtonGroup>
+          { this.state.showButtons.prev &&
+            <Button
+              bsStyle="success"
+              bsSize="small"
+            >&lt; Prev</Button>
+         }
+         { this.state.showButtons.next &&
+          <Button
+            bsStyle="success"
+            bsSize="small"
+          >Next &gt;</Button>
+        }
+        </ButtonGroup>
       </div>
     )
   };
