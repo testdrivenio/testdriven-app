@@ -59,6 +59,7 @@ services:
       - REACT_APP_USERS_SERVICE_URL=${REACT_APP_USERS_SERVICE_URL}
       - REACT_APP_API_GATEWAY_URL=${REACT_APP_API_GATEWAY_URL}
       - REACT_APP_EXERCISES_SERVICE_URL=${REACT_APP_EXERCISES_SERVICE_URL}
+      - REACT_APP_SCORES_SERVICE_URL=${REACT_APP_SCORES_SERVICE_URL}
       - CHOKIDAR_USEPOLLING=true
     depends_on:
       - users-service
@@ -123,12 +124,16 @@ services:
       - APP_SETTINGS=project.config.DevelopmentConfig
       - DATABASE_URL=postgres://postgres:postgres@scores-db:5432/scores_dev
       - DATABASE_TEST_URL=postgres://postgres:postgres@scores-db:5432/scores_test
+      - USERS_SERVICE_URL=${REACT_APP_USERS_SERVICE_URL}
+      - EXERCISES_SERVICE_URL=${REACT_APP_EXERCISES_SERVICE_URL}
     depends_on:
       - users-service
       - scores-db
+      - exercises
     links:
       - users-service
       - scores-db
+      - exercises
 
   scores-db:
     container_name: scores-db

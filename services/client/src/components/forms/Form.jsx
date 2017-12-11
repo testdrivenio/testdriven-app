@@ -21,6 +21,7 @@ class Form extends Component {
     };
     this.handleUserFormSubmit = this.handleUserFormSubmit.bind(this);
     this.handleFormChange = this.handleFormChange.bind(this);
+    this.addScores = this.addScores.bind(this);
   };
   componentDidMount() {
     this.clearForm();
@@ -60,10 +61,11 @@ class Form extends Component {
       };
     };
     const url = `${process.env.REACT_APP_USERS_SERVICE_URL}/auth/${formType}`;
-    axios.post(url, data)
+    return axios.post(url, data)
     .then((res) => {
       this.clearForm();
       this.props.loginUser(res.data.auth_token);
+      if (formType === 'register') this.addScores();
     })
     .catch((err) => {
       if (formType === 'login') {
@@ -73,6 +75,27 @@ class Form extends Component {
         this.props.createMessage('That user already exists.', 'danger');
       };
     });
+  };
+  addScores() {
+    const exercisesURL = process.env.REACT_APP_EXERCISES_SERVICE_URL;
+    return axios.get(`${exercisesURL}/exercises`)
+    .then((res) => {
+      const requests = res.data.data.exercises.map((el) => {
+        const options = {
+          url: `${process.env.REACT_APP_SCORES_SERVICE_URL}/scores`,
+          method: 'post',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${window.localStorage.authToken}`
+          },
+          data: {user_id: 1, exercise_id: el.id},
+        };
+        return axios(options);
+      });
+      return axios.all(requests)
+    })
+    .then(axios.spread((...res) => { console.log(res); }))
+    .catch((err) => { console.log(err) });
   };
   allTrue() {
     let formRules = registerFormRules;

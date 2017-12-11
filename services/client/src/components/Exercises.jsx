@@ -26,7 +26,7 @@ class Exercises extends Component {
     this.getExercises();
   }
   getExercises() {
-    axios.get(`${process.env.REACT_APP_EXERCISES_SERVICE_URL}/exercises`)
+    return axios.get(`${process.env.REACT_APP_EXERCISES_SERVICE_URL}/exercises`)
     .then((res) => { this.setState({ exercises: res.data.data.exercises }); })
     .catch((err) => { console.log(err); });
   };
