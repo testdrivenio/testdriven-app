@@ -29,6 +29,9 @@ class Exercises extends Component {
     this.submitExercise = this.submitExercise.bind(this);
     this.updateScore = this.updateScore.bind(this);
     this.renderButtons = this.renderButtons.bind(this);
+    this.nextExercise = this.nextExercise.bind(this);
+    this.prevExercise = this.prevExercise.bind(this);
+    this.resetEditor = this.resetEditor.bind(this);
   };
   componentDidMount() {
     this.getExercises();
@@ -40,7 +43,7 @@ class Exercises extends Component {
         exercises: res.data.data.exercises,
         currentExercise: 0
       });
-      console.log(this.renderButtons());
+      this.renderButtons();
     })
     .catch((err) => { console.log(err); });
   };
@@ -116,6 +119,36 @@ class Exercises extends Component {
       }
     });
   };
+  nextExercise() {
+    if (this.state.showButtons.next) {
+      const currentExercise = this.state.currentExercise;
+      this.setState({currentExercise: currentExercise + 1}, () => {
+        this.resetEditor()
+        this.renderButtons();
+      });
+    }
+  };
+  prevExercise() {
+    if (this.state.showButtons.prev) {
+      const currentExercise = this.state.currentExercise;
+      this.setState({currentExercise: currentExercise - 1}, () => {
+        this.resetEditor();
+        this.renderButtons();
+      });
+    }
+  };
+  resetEditor() {
+    const editor = {
+      value: '# Enter your code here.',
+      button: {
+        isDisabled: false,
+      },
+      showGrading: false,
+      showCorrect: false,
+      showIncorrect: false,
+    }
+    this.setState({editor: editor})
+  }
   render() {
     return (
       <div>
@@ -147,12 +180,14 @@ class Exercises extends Component {
             <Button
               bsStyle="success"
               bsSize="small"
+              onClick={() => this.prevExercise()}
             >&lt; Prev</Button>
          }
          { this.state.showButtons.next &&
           <Button
             bsStyle="success"
             bsSize="small"
+            onClick={() => this.nextExercise()}
           >Next &gt;</Button>
         }
         </ButtonGroup>

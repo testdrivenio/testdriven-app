@@ -181,7 +181,7 @@ class TestScoresService(BaseTestCase):
 
     def test_update_score(self):
         """Ensure an existing score can be updated in the database."""
-        score = add_score(998877, 65479, True)
+        add_score(998877, 65479, True)
         with self.client:
             response = self.client.put(
                 f'/scores/65479',
