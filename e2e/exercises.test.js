@@ -81,7 +81,6 @@ test(`should allow a user to move to different exercises`, async (t) => {
     .click(Selector('button').withText('Prev'))
     .expect(Selector('button').withText('Next').exists).ok()
     .expect(Selector('button').withText('Prev').exists).ok()
-    .debug()
     .expect(Selector('.ace_comment').withText(
       '# Enter your code here.').exists).ok()
 });

@@ -6,18 +6,20 @@ import UsersList from '../UsersList';
 
 const users = [
   {
-    'active': true,
-    'admin': false,
-    'email': 'michael@realpython.com',
-    'id': 1,
-    'username': 'michael'
+    active: true,
+    admin: false,
+    email: 'michael@realpython.com',
+    id: 1,
+    username: 'michael',
+    scores: [],
   },
   {
-    'active': true,
-    'admin': false,
-    'email': 'michael@mherman.org',
-    'id': 2,
-    'username': 'michaelherman'
+    active: true,
+    admin: false,
+    email: 'michael@mherman.org',
+    id: 2,
+    username: 'michaelherman',
+    scores: [],
   }
 ];
 
@@ -39,7 +41,7 @@ test('UsersList renders properly', () => {
   // table head
   expect(wrapper.find('thead').length).toBe(1);
   const th = wrapper.find('th');
-  expect(th.length).toBe(4);
+  expect(th.length).toBe(7);
   expect(th.get(0).props.children).toBe('User ID');
   expect(th.get(1).props.children).toBe('Username');
   expect(th.get(2).props.children).toBe('Active');

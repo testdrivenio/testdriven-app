@@ -16,6 +16,7 @@ const testData = [
     isAuthenticated: false,
     loginUser: jest.fn(),
     createMessage: jest.fn(),
+    getUsers: jest.fn(),
   },
   {
     formType: 'login',
@@ -26,6 +27,7 @@ const testData = [
     isAuthenticated: false,
     loginUser: jest.fn(),
     createMessage: jest.fn(),
+    getUsers: jest.fn(),
   }
 ];
 

@@ -94,7 +94,7 @@ class Form extends Component {
       });
       return axios.all(requests)
     })
-    .then(axios.spread((...res) => { console.log(res); }))
+    .then(axios.spread((...res) => { this.props.getUsers(); }))
     .catch((err) => { console.log(err) });
   };
   allTrue() {
@@ -224,6 +224,7 @@ Form.propTypes = {
   isAuthenticated: PropTypes.bool.isRequired,
   loginUser: PropTypes.func.isRequired,
   createMessage: PropTypes.func.isRequired,
+  getUsers: PropTypes.func.isRequired,
 };
 
 export default Form;

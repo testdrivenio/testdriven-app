@@ -16,6 +16,11 @@ const exercises = [
   }
 ];
 
+const defaultProps = {
+  isAuthenticated: false,
+  getUsers: jest.fn
+}
+
 beforeEach(() => {
   console.error = jest.fn();
   console.error.mockClear();
@@ -24,7 +29,7 @@ beforeEach(() => {
 test('Exercises renders properly when not authenticated', () => {
   const onDidMount = jest.fn();
   Exercises.prototype.componentDidMount = onDidMount;
-  const wrapper = shallow(<Exercises isAuthenticated={false}/>);
+  const wrapper = shallow(<Exercises {...defaultProps}/>);
   wrapper.setState({exercises : exercises});
   const alert = wrapper.find('.alert');
   expect(alert.length).toBe(1);
@@ -36,7 +41,8 @@ test('Exercises renders properly when not authenticated', () => {
 test('Exercises renders properly when authenticated', () => {
   const onDidMount = jest.fn();
   Exercises.prototype.componentDidMount = onDidMount;
-  const wrapper = shallow(<Exercises isAuthenticated={true}/>);
+  defaultProps.isAuthenticated = true;
+  const wrapper = shallow(<Exercises {...defaultProps}/>);
   wrapper.setState({exercises : exercises});
   const alert = wrapper.find('.alert');
   expect(alert.length).toBe(0);
@@ -48,20 +54,20 @@ test('Exercises does not render properly when not all props are defined', () => 
   Exercises.prototype.componentDidMount = onDidMount;
   const wrapper = shallow(<Exercises/>);
   wrapper.setState({exercises : exercises});
-  expect(console.error).toHaveBeenCalledTimes(2);
+  expect(console.error).toHaveBeenCalledTimes(3);
 });
 
 test('Exercises renders a snapshot properly', () => {
   const onDidMount = jest.fn();
   Exercises.prototype.componentDidMount = exercises;
-  const tree = renderer.create(<Exercises isAuthenticated={false}/>).toJSON();
+  const tree = renderer.create(<Exercises {...defaultProps}/>).toJSON();
   expect(tree).toMatchSnapshot();
 });
 
 test('Exercises will call componentWillMount when mounted', () => {
   const onWillMount = jest.fn();
   Exercises.prototype.componentWillMount = onWillMount;
-  const wrapper = mount(<Exercises isAuthenticated={false}/>);
+  const wrapper = mount(<Exercises {...defaultProps}/>);
   expect(onWillMount).toHaveBeenCalledTimes(1)
   expect(console.error).toHaveBeenCalledTimes(0);
 });
@@ -69,7 +75,7 @@ test('Exercises will call componentWillMount when mounted', () => {
 test('Exercises will call componentDidMount when mounted', () => {
   const onDidMount = jest.fn();
   Exercises.prototype.componentDidMount = onDidMount;
-  const wrapper = mount(<Exercises isAuthenticated={false}/>);
+  const wrapper = mount(<Exercises {...defaultProps}/>);
   expect(onDidMount).toHaveBeenCalledTimes(1)
   expect(console.error).toHaveBeenCalledTimes(0);
 });

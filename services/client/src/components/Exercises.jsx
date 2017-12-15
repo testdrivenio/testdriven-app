@@ -99,7 +99,9 @@ class Exercises extends Component {
       data: {correct:bool}
     };
     return axios(options)
-    .then((res) => { console.log(res); })
+    .then((res) => {
+      this.props.getUsers();
+    })
     .catch((error) => { console.log(error); });
   };
   renderButtons() {
@@ -198,6 +200,7 @@ class Exercises extends Component {
 
 Exercises.propTypes = {
   isAuthenticated: PropTypes.bool.isRequired,
+  getUsers: PropTypes.func.isRequired,
 };
 
 export default Exercises;

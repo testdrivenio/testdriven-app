@@ -14,6 +14,9 @@ const UsersList = (props) => {
             <th>Username</th>
             <th>Active</th>
             <th>Admin</th>
+            <th>1</th>
+            <th>2</th>
+            <th>3</th>
           </tr>
         </thead>
         <tbody>
@@ -25,6 +28,11 @@ const UsersList = (props) => {
                   <td>{user.username}</td>
                   <td>{String(user.active)}</td>
                   <td>{String(user.admin)}</td>
+                    {
+                      user.scores && user.scores.map((score) => {
+                        return <td key={score.id}>{String(score.correct)}</td>
+                      })
+                    }
                 </tr>
               )
             })
@@ -36,7 +44,16 @@ const UsersList = (props) => {
 };
 
 UsersList.propTypes = {
-  users: PropTypes.array.isRequired,
+  users: PropTypes.arrayOf(
+    PropTypes.shape({
+      active: PropTypes.bool.isRequired,
+      admin: PropTypes.bool.isRequired,
+      email: PropTypes.string.isRequired,
+      id: PropTypes.number.isRequired,
+      scores: PropTypes.array.isRequired,
+      username: PropTypes.string.isRequired,
+    }).isRequired,
+  ).isRequired,
 };
 
 export default UsersList;
