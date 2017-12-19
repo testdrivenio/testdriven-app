@@ -88,7 +88,7 @@ class Form extends Component {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${window.localStorage.authToken}`
           },
-          data: {user_id: 1, exercise_id: el.id},
+          data: {exercise_id: el.id},
         };
         return axios(options);
       });
