@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Table } from 'react-bootstrap';
 
 const UsersList = (props) => {
@@ -17,7 +18,7 @@ const UsersList = (props) => {
         </thead>
         <tbody>
           {
-            props.users.map((user) => {
+            props.users && props.users.map((user) => {
               return (
                 <tr key={user.id}>
                   <td>{user.id}</td>
@@ -32,6 +33,19 @@ const UsersList = (props) => {
       </Table>
     </div>
   )
+};
+
+UsersList.propTypes = {
+  users: PropTypes.arrayOf(
+    PropTypes.shape({
+      active: PropTypes.bool.isRequired,
+      admin: PropTypes.bool.isRequired,
+      email: PropTypes.string.isRequired,
+      id: PropTypes.number.isRequired,
+      scores: PropTypes.array.isRequired,
+      username: PropTypes.string.isRequired,
+    }).isRequired,
+  ).isRequired,
 };
 
 export default UsersList;
