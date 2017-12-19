@@ -77,13 +77,6 @@ def seed_db():
         test_code='reverse("racecar")',
         test_code_solution='racecar'
     ))
-    db.session.add(Exercise(
-        body=('Define a function called factorial that takes a random number '
-              'as an argument and then returns the factorial of that given '
-              'number.'),
-        test_code='factorial(5)',
-        test_code_solution='120'
-    ))
     db.session.commit()
 
 
