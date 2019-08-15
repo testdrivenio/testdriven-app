@@ -20,6 +20,15 @@ class TestUserModel(BaseTestCase):
         self.assertTrue(user.active)
         self.assertFalse(user.admin)
 
+    def test_get_user_from_db(self):
+        add_user('justatest', 'test@test.com', self.default_passw)
+        user = User.query.filter_by(email='test@test.com').first()
+        self.assertTrue(user.id)
+        self.assertEqual(user.username, 'justatest')
+        self.assertEqual(user.email, 'test@test.com')
+        self.assertTrue(user.active)
+        self.assertTrue(user.password)
+
     def test_add_user_duplicate_username(self):
         add_user('justatest', 'test@test.com', 'test')
         duplicate_user = User(
