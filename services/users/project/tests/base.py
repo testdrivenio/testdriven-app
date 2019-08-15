@@ -10,6 +10,8 @@ app = create_app()
 
 
 class BaseTestCase(TestCase):
+    default_passw = 'greaterthaneight'
+
     def create_app(self):
         app.config.from_object('project.config.TestingConfig')
         return app
